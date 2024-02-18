@@ -15,17 +15,18 @@
 #endif
 
 volatile int stopSignal = 0;
+volatile int received_num = 0;
 
-void counter(int received_num){
+void counter(){
+  int count = 0;
   debug("received value:");
   debug(received_num);
-  int hundredcount = received_num;
-  while(stopSignal != 1){
+  while(count < 100 && stopSignal != 1){
     received_num++;
+    count++;
     vTaskDelay(1000/portTICK_PERIOD_MS);
     debugln("counter:");
     debug(received_num);
-    
   }
 }
 
@@ -39,9 +40,9 @@ void loop(){
     if(input == "stop"){
       stopSignal = 1;
     } else if(isNumeric(input)){
-      int num = input.toInt();
+      received_num = input.toInt();
       stopSignal = 0;
-      counter(num);
+      counter();
     }
   }
 }
